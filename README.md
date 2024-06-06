@@ -3,7 +3,7 @@ This is a data science project that investigates how green spaces influence loca
 
 
 ## Park Data 
-The file *VERDE_URBANO_2011_2021_ISTAT* contains the data updated to 2021, the data for capital municipalities includes:
+The file *VERDE_URBANO_2011_2021_ISTAT* contains the data updated to 2021. The data for capital municipalities includes:
 
 - planning tools (plan, regulation, census, ecological network)
 - monitoring according to Law 10/2013 (planting of new trees, tree balance, national tree day, development of green spaces, risk of tree collapse)
