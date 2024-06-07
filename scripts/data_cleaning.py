@@ -123,6 +123,11 @@ def crime_clean_function(path_in, path_out, savefile):
 
     """
 
+    # read the raw dataset
+    df = pd.read_csv(os.path.join(path_in, "DCCV_SEGNALAZPS_22052024154759113.csv"))
+    
+    # removing columns
+    df.remove(["ITTER107", "TIPO_DATO35"], axis=1, inplace=True)
 
 ## Main ##
 
