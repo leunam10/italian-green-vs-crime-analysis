@@ -33,7 +33,7 @@ def park_clean_function(path_in, path_out, savefile):
 
     """
     
-    This function takes clean the raw park excel file and save distinct csv files
+    This function is used to clean the raw park excel file and save distinct csv files
 
     """
 
@@ -44,159 +44,84 @@ def park_clean_function(path_in, path_out, savefile):
     df13_1 = pd.read_excel(os.path.join(path_in, "VERDE_URBANO_2011_2021_ISTAT.xlsx"), sheet_name="Tav 13.1 - verde urbano ")
     df13_2 = pd.read_excel(os.path.join(path_in, "VERDE_URBANO_2011_2021_ISTAT.xlsx"), sheet_name="Tav 13.2 - verde urbano ")
 
-    # cleaning 'Tav. 10.1  - verde urbano' sheet
-    # change the name of the columns
-    df10_1.rename(columns={df10_1.columns[0] : "cities",
-                           "Unnamed: 1": "2011",
-                           "Unnamed: 2": "2012",
-                           "Unnamed: 3": "2013",
-                           "Unnamed: 4": "2014",
-                           "Unnamed: 5": "2015",
-                           "Unnamed: 6": "2016",
-                           "Unnamed: 7": "2017",
-                           "Unnamed: 8": "2018",
-                           "Unnamed: 9": "2019",
-                           "Unnamed: 10": "2020",
-                           "Unnamed: 11": "2021"}, inplace=True)
-    # remove NaN
-    df10_1.dropna(inplace=True)
+    df_list = [df10_1, df10_2, df13_1, df13_2]
 
-    # remove first row --> additional header (not useful after renaming)
-    df10_1.drop(index=1, inplace=True)
-    
-    # reset index
-    df10_1.reset_index(drop=True, inplace=True)
+    print("")
+    # cycle over all the dataframes to clean
+    for df in df_list:
+        
+        print(f"Dataset: {df.columns[0]}")
+        print("Columns renaming")
+        # change the name of the columns
+        df.rename(columns={df.columns[0] : "cities",
+                               "Unnamed: 1": "2011",
+                               "Unnamed: 2": "2012",
+                               "Unnamed: 3": "2013",
+                               "Unnamed: 4": "2014",
+                               "Unnamed: 5": "2015",
+                               "Unnamed: 6": "2016",
+                               "Unnamed: 7": "2017",
+                               "Unnamed: 8": "2018",
+                               "Unnamed: 9": "2019",
+                               "Unnamed: 10": "2020",
+                               "Unnamed: 11": "2021"}, inplace=True)
+        print("Drop NaN")
+        # remove NaN
+        df.dropna(inplace=True)
 
-    # renaming some cities in the "cities" column
-    df10_1.replace({"cities" : {"Nord (*)" : "North",
+        print("Cleaning header")
+        # remove first row --> additional header (not useful after renaming)
+        df.drop(index=1, inplace=True)
+
+        print("Reset index")
+        # reset index
+        df.reset_index(drop=True, inplace=True)
+
+        print("Cleaning specific values")
+        # renaming some cities in the "cities" column
+        df.replace({"cities" : {"Bolzano - Bozen " : "Bolzano",
+                                "Bolzano - Bozen" : "Bolzano",
+                                "Reggio nell'Emilia " : "Reggio Emilia",
+                                "Reggio nell'Emilia" : "Reggio Emilia",
+                                "Isernia (a)" : "Isernia",
+                                "Isernia (b)" : "Isernia",
+                                "Matera  (a)" : "Matera",
+                                "Matera  (b)" : "Matera",
+                                "Trapani (b)" : "Trapani",
+                                "Nord (*)" : "North",
                                 "Nord-ovest (*)" : "North-west",
                                 "Nord-est (*)" : "North-east",
                                 "Centro (*)" : "Center",
                                 "Mezzogiorno (*)" : "Mezzogiorno",
-                                "Sud (*)" : "Sud",
+                                "Sud (*)" : "South",
                                 "Isole (*)" : "Island",
                                 "Capoluoghi di città metropolitana " : "capital_cities",
                                 "Capoluoghi di provincia (*)" : "provincial_capitals",
                                 "Italia (*)" : "Italy"}}, inplace=True)
-    
-    # cleaning 'Tav 10.2 - verde urbano '
-    # change the name of the columns
-    df10_2.rename(columns={df10_2.columns[0] : "cities",
-                           "Unnamed: 1": "2011",
-                           "Unnamed: 2": "2012",
-                           "Unnamed: 3": "2013",
-                           "Unnamed: 4": "2014",
-                           "Unnamed: 5": "2015",
-                           "Unnamed: 6": "2016",
-                           "Unnamed: 7": "2017",
-                           "Unnamed: 8": "2018",
-                           "Unnamed: 9": "2019",
-                           "Unnamed: 10": "2020",
-                           "Unnamed: 11": "2021"}, inplace=True)
- 
-    # remove NaN
-    df10_2.dropna(inplace=True)
+        
+        # removing white spaces from the name of the cities
+        print("Stripping of the cities name")
+        df["cities"] = df["cities"].str.strip()
+        print("")
 
-    # remove first row --> additional header (not useful after renaming)
-    df10_2.drop(index=1, inplace=True)
-    
-    # reset index
-    df10_2.reset_index(drop=True, inplace=True)
 
-    # renaming some cities in the "cities" column
-    df10_2.replace({"cities" : {"Nord (*)" : "North",
-                                "Nord-ovest (*)" : "North-west",
-                                "Nord-est (*)" : "North-east",
-                                "Centro (*)" : "Center",
-                                "Mezzogiorno (*)" : "Mezzogiorno",
-                                "Sud (*)" : "Sud",
-                                "Isole (*)" : "Island",
-                                "Capoluoghi di città metropolitana " : "capital_cities",
-                                "Capoluoghi di provincia (*)" : "provincial_capitals",
-                                "Italia (*)" : "Italy"}}, inplace=True)
 
-    # cleaning 'Tav 13.1 - verde urbano '
-    # change the name of the columns
-    df13_1.rename(columns={df13_1.columns[0] : "cities",
-                           "Unnamed: 1": "2011",
-                           "Unnamed: 2": "2012",
-                           "Unnamed: 3": "2013",
-                           "Unnamed: 4": "2014",
-                           "Unnamed: 5": "2015",
-                           "Unnamed: 6": "2016",
-                           "Unnamed: 7": "2017",
-                           "Unnamed: 8": "2018",
-                           "Unnamed: 9": "2019",
-                           "Unnamed: 10": "2020",
-                           "Unnamed: 11": "2021"})
-
-    # remove NaN
-    df13_1.dropna(inplace=True)
-
-    # remove first row --> additional header (not useful after renaming)
-    df13_1.drop(index=1, inplace=True)
-    
-    # reset index
-    df13_1.reset_index(drop=True, inplace=True)
-
-    # renaming some cities in the "cities" column
-    df13_1.replace({"cities" : {"Nord (*)" : "North",
-                                "Nord-ovest (*)" : "North-west",
-                                "Nord-est (*)" : "North-east",
-                                "Centro (*)" : "Center",
-                                "Mezzogiorno (*)" : "Mezzogiorno",
-                                "Sud (*)" : "Sud",
-                                "Isole (*)" : "Island",
-                                "Capoluoghi di città metropolitana " : "capital_cities",
-                                "Capoluoghi di provincia (*)" : "provincial_capitals",
-                                "Italia (*)" : "Italy"}}, inplace=True)
-#
-    # cleaning 'Tav 13.2 - verde urbano '
-    # change the name of the columns
-    df13_2.rename(columns={df13_2.columns[0] : "cities",
-                           "Unnamed: 1": "2011",
-                           "Unnamed: 2": "2012",
-                           "Unnamed: 3": "2013",
-                           "Unnamed: 4": "2014",
-                           "Unnamed: 5": "2015",
-                           "Unnamed: 6": "2016",
-                           "Unnamed: 7": "2017",
-                           "Unnamed: 8": "2018",
-                           "Unnamed: 9": "2019",
-                           "Unnamed: 10": "2020",
-                           "Unnamed: 11": "2021"}, inplace=True)
-
-    # remove NaN
-    df13_2.dropna(inplace=True)
-
-    # remove first row --> additional header (not useful after renaming)
-    df13_2.drop(index=1, inplace=True)
-    
-    # reset index
-    df13_2.reset_index(drop=True, inplace=True)
-
-    # renaming some cities in the "cities" column
-    df13_2.replace({"cities" : {"Nord (*) " : "North",
-                                "Nord-Ovest (*) " : "North-west",
-                                "Nord-Est (*) " : "North-east",
-                                "Centro (*) " : "Center",
-                                "Mezzogiorno (*) " : "Mezzogiorno",
-                                "Sud (*) " : "Sud",
-                                "Isole (*) " : "Island",
-                                "Capoluoghi di città metropolitana " : "capital_cities",
-                                "Capoluoghi di provincia (*) " : "provincial_capitals",
-                                "Italia (*)" : "Italy"}}, inplace=True)
-
+    print("Saving csv files")
     if(savefile):
         # save dataframe with the Density of urban green areas in provincial/metropolitan city capitals (Percentage incidence on the municipal area)
-        df10_1.to_csv(os.path.join(path_out, "urban_green_area_density_in_city_capitals.csv"))
-        df10_2.to_csv(os.path.join(path_out, "test2.csv"))
-        df13_1.to_csv(os.path.join(path_out, "test3.csv"))
-        df13_2.to_csv(os.path.join(path_out, "test4.csv"))
+        df_list[0].to_csv(os.path.join(path_out, "urban_green_area_density_in_city_capitals_2011_2021.csv"))
+        df_list[1].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_m2.csv"))
+        df_list[2].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2_per_inhabitant.csv"))
+        df_list[3].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2.csv"))
 
 
 def crime_clean_function(path_in, path_out, savefile):
-    pass
+    
+    """
+    
+    This function is used to clean the raw crime csv file and save it into a files
+
+    """
 
 
 ## Main ##
