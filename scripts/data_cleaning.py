@@ -124,11 +124,24 @@ def crime_clean_function(path_in, path_out, savefile):
     """
 
     # read the raw dataset
-    df = pd.read_csv(os.path.join(path_in, "DCCV_SEGNALAZPS_22052024154759113.csv"))
+    df = pd.read_csv(os.path.join(path_in, "DCCV_SEGNALAZPS_09062024111644648.csv"))
     
     # removing columns
-    df.remove(["ITTER107", "TIPO_DATO35"], axis=1, inplace=True)
+    df.drop(["ITTER107", "TIPO_DATO35", 
+             "Tipo dato", "Flag Codes", 
+             "Flags", "Seleziona periodo"], axis=1, inplace=True)
 
+    # renaming columns
+    df.rename(columns={"Territorio" : "cities",
+                       "REATI_PS" : "crime_code",
+                       "Tipo di delitto" : "felony",
+                       "TIME" : "year",
+                       "Value" : "count"}, inplace=True)
+
+    
+
+    #if(savefile):
+        #df.to_csv(os.path.join(path_out, "crime_"))
 ## Main ##
 
 # path where are saved the raw data
