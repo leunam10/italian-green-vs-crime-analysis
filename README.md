@@ -12,6 +12,9 @@ The file *VERDE_URBANO_2011_2021_ISTAT.xlsx* contains the data from 2011 to 2021
 - agricultural parks.
 
 ## Crime Data
-The file *DCCV_SEGNALAZPS_09062024111644648.csv* contains data from 2004 and 2022:
+The file *individuals_reported_and_arrested_or_detained_by_police_forces.csv* contains data from 2004 and 2022:
 
-the survey with data extracted from the computer archives of the Public Prosecutor's Offices for adults aims to produce statistics on criminal proceedings in which the Prosecutor's Offices either close the case or initiate prosecution. Information is collected on the individuals under investigation (age, gender, place of birth) and the crimes attributed to them (felonies or misdemeanors and the place where the crime was committed) according to either an analytical or a synthetic classification of the crimes.
+Crimes reported to the judicial authority by the State Police, the Carabinieri, and the Guardia di Finanza: The data relating to the crimes and the individuals reported by the police forces to the judicial authority are processed.
+The data comes from the operational activities of the police forces and does not follow the subsequent judicial process of the reported incidents.
+It should be noted that the number of reports referring to individuals reported does not exactly match the actual number of individuals reported. The same alleged perpetrator of a crime is counted each time they are reported in the considered year, for each crime committed.
+The sum of crimes distinguished by province may not match the total for the region, and the sum of the regions may not match the total for Italy, due to the lack of specification, for some crimes, of the place where they were committed (or the indication of the region where the crime was committed but not the province).
