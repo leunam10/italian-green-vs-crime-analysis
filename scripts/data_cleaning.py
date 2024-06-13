@@ -29,7 +29,7 @@ savefile = True if args.savefile == "yes" else False
 
 
 ## Functions ##
-def park_clean_function(path_in, path_out, savefile):
+def park_clean_function(dataset_name, path_in, path_out, savefile):
 
     """
     
@@ -39,10 +39,10 @@ def park_clean_function(path_in, path_out, savefile):
 
     # read the raw park dataset: each sheet is a dataframe    
     # !! do not change the sheet_name, they are different because of wrong syntax among the sheets of the file !!
-    df10_1 = pd.read_excel(os.path.join(path_in, "VERDE_URBANO_2011_2021_ISTAT.xlsx"), sheet_name="Tav. 10.1  - verde urbano")
-    df10_2 = pd.read_excel(os.path.join(path_in, "VERDE_URBANO_2011_2021_ISTAT.xlsx"), sheet_name="Tav 10.2 - verde urbano ")
-    df13_1 = pd.read_excel(os.path.join(path_in, "VERDE_URBANO_2011_2021_ISTAT.xlsx"), sheet_name="Tav 13.1 - verde urbano ")
-    df13_2 = pd.read_excel(os.path.join(path_in, "VERDE_URBANO_2011_2021_ISTAT.xlsx"), sheet_name="Tav 13.2 - verde urbano ")
+    df10_1 = pd.read_excel(os.path.join(path_in, dataset_name), sheet_name="Tav. 10.1  - verde urbano")
+    df10_2 = pd.read_excel(os.path.join(path_in, dataset_name), sheet_name="Tav 10.2 - verde urbano ")
+    df13_1 = pd.read_excel(os.path.join(path_in, dataset_name), sheet_name="Tav 13.1 - verde urbano ")
+    df13_2 = pd.read_excel(os.path.join(path_in, dataset_name), sheet_name="Tav 13.2 - verde urbano ")
 
     df_list = [df10_1, df10_2, df13_1, df13_2]
 
@@ -115,7 +115,7 @@ def park_clean_function(path_in, path_out, savefile):
         df_list[3].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2.csv"))
 
 
-def crime_clean_function(path_in, path_out, savefile):
+def crime_clean_function(dataset_name, path_in, path_out, savefile):
     
     """
     
@@ -124,7 +124,7 @@ def crime_clean_function(path_in, path_out, savefile):
     """
 
     # read the raw dataset
-    df = pd.read_csv(os.path.join(path_in, "DCCV_SEGNALAZPS_09062024111644648.csv"))
+    df = pd.read_csv(os.path.join(path_in, dataset_name))
     
     # removing columns
     df.drop(["ITTER107", "TIPO_DATO35", 
@@ -138,21 +138,20 @@ def crime_clean_function(path_in, path_out, savefile):
                        "TIME" : "year",
                        "Value" : "count"}, inplace=True)
 
-    
+    if(savefile):
+        df.to_csv(os.path.join(path_out, "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT_clean.csv"))
 
-    #if(savefile):
-        #df.to_csv(os.path.join(path_out, "crime_"))
 ## Main ##
 
 # path where are saved the raw data
 path_in = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/raw"))
 
 # path where the cleaned data are saved
-path_out = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data"))
+path_out = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/clean"))
 
 if(dataset == "park"):
-    park_clean_function(path_in, path_out, savefile)
+    park_clean_function("urban_green_2011_2021_ISTAT.xlsx", path_in, path_out, savefile)
 elif(dataset == "crime"):
-    crime_clean_function(path_in, path_out, savefile)
+    crime_clean_function("individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv", path_in, path_out, savefile)
 
 
