@@ -18,8 +18,8 @@ parser = argparse.ArgumentParser(
     description = "This script is used to clean the raw data and to produce the final csv files that are used for the analysis"
 )
 
-parser.add_argument("--dataset", help = "Type the dataset to clean [park/crime]")
-parser.add_argument("--savefile", default="yes", help = "if to save the cleaned file in the output directory [yes/no]")
+parser.add_argument("--dataset", choices = ["park", "crime"], help = "Type the dataset to clean [park/crime]")
+parser.add_argument("--savefile", choices = ["yes", "no"], default="no", help = "if to save the cleaned file in the output directory [yes/no]")
 
 args = parser.parse_args()
 dataset = args.dataset
@@ -102,17 +102,19 @@ def park_clean_function(dataset_name, path_in, path_out, savefile):
         # removing white spaces from the name of the cities
         print("Stripping of the cities name")
         df["cities"] = df["cities"].str.strip()
+
+        # replace not acceptable string (e.g. ….) with zeros
+        print("Replacing non-acceptable strings")
+        df["2011"].str.replace("…. ","0")
         print("")
-
-
 
     print("Saving csv files")
     if(savefile):
         # save dataframe with the Density of urban green areas in provincial/metropolitan city capitals (Percentage incidence on the municipal area)
-        df_list[0].to_csv(os.path.join(path_out, "urban_green_area_density_in_city_capitals_2011_2021.csv"))
-        df_list[1].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_m2.csv"))
-        df_list[2].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2_per_inhabitant.csv"))
-        df_list[3].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2.csv"))
+        df_list[0].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_density.csv"), index=False)
+        df_list[1].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_m2.csv"), index=False)
+        df_list[2].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2_per_inhabitant.csv"), index=False)
+        df_list[3].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2.csv"), index=False)
 
 
 def crime_clean_function(dataset_name, path_in, path_out, savefile):
@@ -139,7 +141,7 @@ def crime_clean_function(dataset_name, path_in, path_out, savefile):
                        "Value" : "count"}, inplace=True)
 
     if(savefile):
-        df.to_csv(os.path.join(path_out, "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT_clean.csv"))
+        df.to_csv(os.path.join(path_out, "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv"), index=False)
 
 ## Main ##
 
@@ -148,10 +150,17 @@ path_in = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join
 
 # path where the cleaned data are saved
 path_out = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/clean"))
+# check if the 'clean' folder exists if not create the folder
+if(not os.path.isdir(path_out)):
+    os.mkdir(path_out)
+
+# Change this filename if you have renamed the input files 
+park_dataset_filename = "urban_green_2011_2021_ISTAT.xlsx"
+crime_dataset_filename = "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv"
 
 if(dataset == "park"):
-    park_clean_function("urban_green_2011_2021_ISTAT.xlsx", path_in, path_out, savefile)
+    park_clean_function(park_dataset_filename, path_in, path_out, savefile)
 elif(dataset == "crime"):
-    crime_clean_function("individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv", path_in, path_out, savefile)
+    crime_clean_function(crime_dataset_filename, path_in, path_out, savefile)
 
 
