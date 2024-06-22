@@ -1,15 +1,18 @@
 """
 
-This script is used to clean the raw data and to produce the final csv files that are used for the analysis
+This script is used to clean the raw data and to produce the final csv files that are used for the analysis.
+After the dataframes are cleaned some useful column are added:
+
+- the GPS coordinates of the cities
 
 """
 
-
 import pandas as pd 
 import argparse
+from geopy.geocoders import Nominatim
 import os
 
-
+pd.set_option("future.no_silent_downcasting", True)
 ######################################################################################################################################
 
 # Argument Definition 
@@ -29,7 +32,7 @@ savefile = True if args.savefile == "yes" else False
 
 
 ## Functions ##
-def park_clean_function(dataset_name, path_in, path_out, savefile):
+def park_clean_function(dataset_name, path_in):
 
     """
     
@@ -47,6 +50,8 @@ def park_clean_function(dataset_name, path_in, path_out, savefile):
     df_list = [df10_1, df10_2, df13_1, df13_2]
 
     print("")
+    # list where the cleaned df are saved
+    df_clean_list = []
     # cycle over all the dataframes to clean
     for df in df_list:
         
@@ -76,6 +81,10 @@ def park_clean_function(dataset_name, path_in, path_out, savefile):
         print("Reset index")
         # reset index
         df.reset_index(drop=True, inplace=True)
+        
+        # removing white spaces from the name of the cities
+        print("Stripping of the cities name")
+        df["cities"] = df["cities"].str.strip()
 
         print("Cleaning specific values")
         # renaming some cities in the "cities" column
@@ -88,36 +97,42 @@ def park_clean_function(dataset_name, path_in, path_out, savefile):
                                 "Matera  (a)" : "Matera",
                                 "Matera  (b)" : "Matera",
                                 "Trapani (b)" : "Trapani",
-                                "Nord (*)" : "North",
-                                "Nord-ovest (*)" : "North-west",
-                                "Nord-est (*)" : "North-east",
-                                "Centro (*)" : "Center",
+                                "Matera (b)" : "Matera",
+                                "Nord (*)" : "Nord",
+                                "Nord (*)" : "Nord",
+                                "Nord-ovest (*)" : "Nord-ovest",
+                                "Nord-Ovest (*)" : "Nord-ovest",
+                                "Nord-est (*)" : "Nord-est",
+                                "Nord-Est (*)" : "Nord-est",
+                                "Centro (*)" : "Centro",
+                                "Centro (*)" : "Centro",
                                 "Mezzogiorno (*)" : "Mezzogiorno",
-                                "Sud (*)" : "South",
-                                "Isole (*)" : "Island",
-                                "Capoluoghi di città metropolitana " : "capital_cities",
-                                "Capoluoghi di provincia (*)" : "provincial_capitals",
-                                "Italia (*)" : "Italy"}}, inplace=True)
+                                "Mezzogiorno (*)" : "Mezzogiorno",
+                                "Sud (*)" : "Sud",
+                                "Sud (*)" : "Sud",
+                                "Isole (*)" : "Isole",
+                                "Isole (*)" : "Isole",
+                                "Capoluoghi di città metropolitana " : "capoluoghi_di_citta_metropolitana",
+                                "Capoluoghi di provincia (*)" : "capoluoghi_di_provincia",
+                                "Capoluoghi di provincia (*)" : "capoluoghi_di_provincia",
+                                "Italia (*)" : "Italia"}}, inplace=True)
         
-        # removing white spaces from the name of the cities
-        print("Stripping of the cities name")
-        df["cities"] = df["cities"].str.strip()
-
         # replace not acceptable string (e.g. ….) with zeros
         print("Replacing non-acceptable strings")
-        df["2011"].str.replace("…. ","0")
+        df["2011"] = df["2011"].replace("….",0)
+        df["2012"] = df["2012"].replace("….",0)
+        df["2013"] = df["2013"].replace("….",0)
+        df["2014"] = df["2014"].replace("….",0)
+        df["2015"] = df["2015"].replace("….",0)
+        df["2016"] = df["2016"].replace("….",0)
+        df["2017"] = df["2017"].replace("….",0)
+        df["2018"] = df["2018"].replace("….",0)
+        
+        df_clean_list.append(df)
         print("")
+    return df_clean_list
 
-    print("Saving csv files")
-    if(savefile):
-        # save dataframe with the Density of urban green areas in provincial/metropolitan city capitals (Percentage incidence on the municipal area)
-        df_list[0].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_density.csv"), index=False)
-        df_list[1].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_m2.csv"), index=False)
-        df_list[2].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2_per_inhabitant.csv"), index=False)
-        df_list[3].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2.csv"), index=False)
-
-
-def crime_clean_function(dataset_name, path_in, path_out, savefile):
+def crime_clean_function(dataset_name, path_in):
     
     """
     
@@ -140,27 +155,63 @@ def crime_clean_function(dataset_name, path_in, path_out, savefile):
                        "TIME" : "year",
                        "Value" : "count"}, inplace=True)
 
+
+    return df
+
+## Initialize Nominatim API
+geolocator = Nominatim(user_agent="geo_city_park_and_crime")
+def get_coordinates(city):
+    try:
+        location = geolocator.geocode(city)
+        return location.latitude, location.longitude
+    except:
+        return None, None
+
+def add_columns_to_park_df(df_list, path_out, savefile):
+
+    for df in df_list:
+        cities = df["cities"]
+        for city in cities:
+            lat, lon = get_coordinates(city)
+            print(city, lat, lon)
+        quit()
+        
+    if(savefile):
+        print("Saving csv files")
+        # save dataframe with the Density of urban green areas in provincial/metropolitan city capitals (Percentage incidence on the municipal area)
+        df_list[0].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_density.csv"), index=False)
+        df_list[1].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_m2.csv"), index=False)
+        df_list[2].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2_per_inhabitant.csv"), index=False)
+        df_list[3].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2.csv"), index=False)
+
+
+def add_columns_to_crime_df(df, path_out, savefile):
     if(savefile):
         df.to_csv(os.path.join(path_out, "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv"), index=False)
+    
+
 
 ## Main ##
 
-# path where are saved the raw data
-path_in = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/raw"))
+if(__name__ == "__main__"):
+    # path where are saved the raw data
+    path_in = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/raw"))
 
-# path where the cleaned data are saved
-path_out = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/clean"))
-# check if the 'clean' folder exists if not create the folder
-if(not os.path.isdir(path_out)):
-    os.mkdir(path_out)
+    # path where the cleaned data are saved
+    path_out = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/clean"))
+    # check if the 'clean' folder exists if not create the folder
+    if(not os.path.isdir(path_out)):
+        os.mkdir(path_out)
 
-# Change this filename if you have renamed the input files 
-park_dataset_filename = "urban_green_2011_2021_ISTAT.xlsx"
-crime_dataset_filename = "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv"
+    # Change this filename if you have renamed the input files 
+    park_dataset_filename = "urban_green_2011_2021_ISTAT.xlsx"
+    crime_dataset_filename = "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv"
 
-if(dataset == "park"):
-    park_clean_function(park_dataset_filename, path_in, path_out, savefile)
-elif(dataset == "crime"):
-    crime_clean_function(crime_dataset_filename, path_in, path_out, savefile)
+    if(dataset == "park"):
+        df_list = park_clean_function(park_dataset_filename, path_in)
+        add_columns_to_park_df(df_list, path_out, savefile)
+    elif(dataset == "crime"):
+        df = crime_clean_function(crime_dataset_filename, path_in)
+        add_columns_to_crime_df(df, path_out, savefile)
 
 
