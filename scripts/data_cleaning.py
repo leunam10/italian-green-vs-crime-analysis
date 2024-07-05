@@ -9,7 +9,6 @@ After the dataframes are cleaned some useful column are added:
 
 import pandas as pd 
 import argparse
-from geopy.geocoders import Nominatim
 import os
 
 pd.set_option("future.no_silent_downcasting", True)
@@ -90,8 +89,8 @@ def park_clean_function(dataset_name, path_in):
         # renaming some cities in the "cities" column
         df.replace({"cities" : {"Bolzano - Bozen " : "Bolzano",
                                 "Bolzano - Bozen" : "Bolzano",
-                                "Reggio nell'Emilia " : "Reggio Emilia",
-                                "Reggio nell'Emilia" : "Reggio Emilia",
+                                "Reggio nell'Emilia " : "Reggio nell'Emilia",
+                                "Reggio nell'Emilia" : "Reggio nell'Emilia",
                                 "Isernia (a)" : "Isernia",
                                 "Isernia (b)" : "Isernia",
                                 "Matera  (a)" : "Matera",
@@ -117,6 +116,13 @@ def park_clean_function(dataset_name, path_in):
                                 "Capoluoghi di provincia (*)" : "capoluoghi_di_provincia",
                                 "Italia (*)" : "Italia"}}, inplace=True)
         
+        # renema specific cities to allign with the name of the province
+        df.replace({"cities" : {"Carbonia" : "Sud Sardegna",
+                                "Pesaro" : "Pesaro e Urbino",
+                                "Carrara" : "Massa Carrara",
+                                "Forlì" : "Forli'",
+                                "Monza" : "Monza e della Brianza"}}, inplace=True)
+
         # replace not acceptable string (e.g. ….) with zeros
         print("Replacing non-acceptable strings")
         df["2011"] = df["2011"].replace("….",0)
@@ -128,9 +134,34 @@ def park_clean_function(dataset_name, path_in):
         df["2017"] = df["2017"].replace("….",0)
         df["2018"] = df["2018"].replace("….",0)
         
+        # create the new province by summing the values of the single cities
+        df_to_add = pd.DataFrame({"cities" : ["Barletta-Andria-Trani", "Forli'-Cesena"],
+                               "2011" : [df.loc[df["cities"] == "Barletta"]["2011"].iloc[0]+df.loc[df["cities"] == "Andria"]["2011"].iloc[0]+df.loc[df["cities"] == "Trani"]["2011"].iloc[0], df.loc[df["cities"] == "Forli'"]["2011"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2011"].iloc[0]],
+                               "2012" : [df.loc[df["cities"] == "Barletta"]["2012"].iloc[0]+df.loc[df["cities"] == "Andria"]["2012"].iloc[0]+df.loc[df["cities"] == "Trani"]["2012"].iloc[0], df.loc[df["cities"] == "Forli'"]["2012"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2012"].iloc[0]],
+                               "2013" : [df.loc[df["cities"] == "Barletta"]["2013"].iloc[0]+df.loc[df["cities"] == "Andria"]["2013"].iloc[0]+df.loc[df["cities"] == "Trani"]["2013"].iloc[0], df.loc[df["cities"] == "Forli'"]["2013"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2013"].iloc[0]],
+                               "2014" : [df.loc[df["cities"] == "Barletta"]["2014"].iloc[0]+df.loc[df["cities"] == "Andria"]["2014"].iloc[0]+df.loc[df["cities"] == "Trani"]["2014"].iloc[0], df.loc[df["cities"] == "Forli'"]["2014"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2014"].iloc[0]],
+                               "2015" : [df.loc[df["cities"] == "Barletta"]["2015"].iloc[0]+df.loc[df["cities"] == "Andria"]["2015"].iloc[0]+df.loc[df["cities"] == "Trani"]["2015"].iloc[0], df.loc[df["cities"] == "Forli'"]["2015"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2015"].iloc[0]],
+                               "2016" : [df.loc[df["cities"] == "Barletta"]["2016"].iloc[0]+df.loc[df["cities"] == "Andria"]["2016"].iloc[0]+df.loc[df["cities"] == "Trani"]["2016"].iloc[0], df.loc[df["cities"] == "Forli'"]["2016"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2016"].iloc[0]],
+                               "2017" : [df.loc[df["cities"] == "Barletta"]["2017"].iloc[0]+df.loc[df["cities"] == "Andria"]["2017"].iloc[0]+df.loc[df["cities"] == "Trani"]["2017"].iloc[0], df.loc[df["cities"] == "Forli'"]["2017"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2017"].iloc[0]],
+                               "2018" : [df.loc[df["cities"] == "Barletta"]["2018"].iloc[0]+df.loc[df["cities"] == "Andria"]["2018"].iloc[0]+df.loc[df["cities"] == "Trani"]["2018"].iloc[0], df.loc[df["cities"] == "Forli'"]["2018"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2018"].iloc[0]],
+                               "2019" : [df.loc[df["cities"] == "Barletta"]["2019"].iloc[0]+df.loc[df["cities"] == "Andria"]["2019"].iloc[0]+df.loc[df["cities"] == "Trani"]["2019"].iloc[0], df.loc[df["cities"] == "Forli'"]["2019"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2019"].iloc[0]],
+                               "2020" : [df.loc[df["cities"] == "Barletta"]["2020"].iloc[0]+df.loc[df["cities"] == "Andria"]["2020"].iloc[0]+df.loc[df["cities"] == "Trani"]["2020"].iloc[0], df.loc[df["cities"] == "Forli'"]["2020"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2020"].iloc[0]],
+                               "2021" : [df.loc[df["cities"] == "Barletta"]["2021"].iloc[0]+df.loc[df["cities"] == "Andria"]["2021"].iloc[0]+df.loc[df["cities"] == "Trani"]["2021"].iloc[0], df.loc[df["cities"] == "Forli'"]["2021"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2021"].iloc[0]]})
+
+        # adding the new provinces to the dataframe
+        df = pd.concat([df, df_to_add], ignore_index=True)
         df_clean_list.append(df)
+
         print("")
-    return df_clean_list
+
+    if(savefile):
+        print("Saving csv files")
+        # save dataframe with the Density of urban green areas in provincial/metropolitan city capitals (Percentage incidence on the municipal area)
+        df_clean_list[0].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_density.csv"), index=False)
+        df_clean_list[1].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_m2.csv"), index=False)
+        df_clean_list[2].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2_per_inhabitant.csv"), index=False)
+        df_clean_list[3].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2.csv"), index=False)
+
 
 def crime_clean_function(dataset_name, path_in):
     
@@ -147,7 +178,8 @@ def crime_clean_function(dataset_name, path_in):
     df.drop(["ITTER107", "TIPO_DATO35", 
              "Tipo dato", "Flag Codes", 
              "Flags", "Seleziona periodo"], axis=1, inplace=True)
-
+    
+    
     # renaming columns
     df.rename(columns={"Territorio" : "cities",
                        "REATI_PS" : "crime_code",
@@ -155,50 +187,24 @@ def crime_clean_function(dataset_name, path_in):
                        "TIME" : "year",
                        "Value" : "count"}, inplace=True)
 
-
-    return df
-
-## Initialize Nominatim API
-geolocator = Nominatim(user_agent="geo_city_park_and_crime")
-def get_coordinates(city):
-    try:
-        location = geolocator.geocode(city)
-        return location.latitude, location.longitude
-    except:
-        return None, None
-
-def add_columns_to_park_df(df_list, path_out, savefile):
-
-    for df in df_list:
-        cities = df["cities"]
-        for city in cities:
-            lat, lon = get_coordinates(city)
-            print(city, lat, lon)
-        quit()
-        
-    if(savefile):
-        print("Saving csv files")
-        # save dataframe with the Density of urban green areas in provincial/metropolitan city capitals (Percentage incidence on the municipal area)
-        df_list[0].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_density.csv"), index=False)
-        df_list[1].to_csv(os.path.join(path_out, "urban_green_area_city_capitals_2011_2021_m2.csv"), index=False)
-        df_list[2].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2_per_inhabitant.csv"), index=False)
-        df_list[3].to_csv(os.path.join(path_out, "availability_of_usable_urban_green_space_city_capitals_2011_2021_m2.csv"), index=False)
-
-
-def add_columns_to_crime_df(df, path_out, savefile):
+    print("Cleaning specific values")
+    # renaming some cities in the "cities" column
+    df.replace({"cities" : {"Bolzano / Bozen" : "Bolzano",
+                            "Provincia Autonoma Bolzano / Bozen" : "Bolzano"}}, inplace=True)
+    
     if(savefile):
         df.to_csv(os.path.join(path_out, "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv"), index=False)
-    
+
 
 
 ## Main ##
 
 if(__name__ == "__main__"):
     # path where are saved the raw data
-    path_in = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/raw"))
+    path_in = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/parks_and_crime/raw"))
 
     # path where the cleaned data are saved
-    path_out = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/clean"))
+    path_out = os.path.join(os.path.realpath(os.path.dirname(__file__)), os.path.join("..", "data/parks_and_crime/clean"))
     # check if the 'clean' folder exists if not create the folder
     if(not os.path.isdir(path_out)):
         os.mkdir(path_out)
@@ -208,10 +214,8 @@ if(__name__ == "__main__"):
     crime_dataset_filename = "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv"
 
     if(dataset == "park"):
-        df_list = park_clean_function(park_dataset_filename, path_in)
-        add_columns_to_park_df(df_list, path_out, savefile)
+        park_clean_function(park_dataset_filename, path_in)
     elif(dataset == "crime"):
-        df = crime_clean_function(crime_dataset_filename, path_in)
-        add_columns_to_crime_df(df, path_out, savefile)
+        crime_clean_function(crime_dataset_filename, path_in)
 
 
