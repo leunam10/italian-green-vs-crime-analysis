@@ -5,3 +5,5 @@ seaborn
 argparse
 openpyxl
 ipython
+geopandas
+shapely
