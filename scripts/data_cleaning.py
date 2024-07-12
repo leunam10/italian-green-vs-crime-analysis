@@ -111,7 +111,7 @@ def park_clean_function(dataset_name, path_in):
                                 "Sud (*)" : "Sud",
                                 "Isole (*)" : "Isole",
                                 "Isole (*)" : "Isole",
-                                "Capoluoghi di città metropolitana " : "capoluoghi_di_citta_metropolitana",
+                                "Capoluoghi città metropolitana" : "capoluoghi_di_citta_metropolitana",
                                 "Capoluoghi di provincia (*)" : "capoluoghi_di_provincia",
                                 "Capoluoghi di provincia (*)" : "capoluoghi_di_provincia",
                                 "Italia (*)" : "Italia"}}, inplace=True)
@@ -122,6 +122,17 @@ def park_clean_function(dataset_name, path_in):
                                 "Carrara" : "Massa Carrara",
                                 "Forlì" : "Forli'",
                                 "Monza" : "Monza e della Brianza"}}, inplace=True)
+
+        df.drop(df[df["cities"] == "Nord"].index, inplace=True)
+        df.drop(df[df["cities"] == "Nord-ovest"].index, inplace=True)
+        df.drop(df[df["cities"] == "Nord-est"].index, inplace=True)
+        df.drop(df[df["cities"] == "Centro"].index, inplace=True)
+        df.drop(df[df["cities"] == "Mezzogiorno"].index, inplace=True)
+        df.drop(df[df["cities"] == "Sud"].index, inplace=True)
+        df.drop(df[df["cities"] == "Isole"].index, inplace=True)
+        df.drop(df[df["cities"] == "capoluoghi_di_citta_metropolitana"].index, inplace=True)
+        df.drop(df[df["cities"] == "capoluoghi_di_provincia"].index, inplace=True)
+        df.drop(df[df["cities"] == "Italia"].index, inplace=True)
 
         # replace not acceptable string (e.g. ….) with zeros
         print("Replacing non-acceptable strings")
