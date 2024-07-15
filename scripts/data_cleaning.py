@@ -94,9 +94,11 @@ def park_clean_function(dataset_name, path_in):
                                 "Isernia (a)" : "Isernia",
                                 "Isernia (b)" : "Isernia",
                                 "Matera  (a)" : "Matera",
+                                "Matera (a)" : "Matera",
                                 "Matera  (b)" : "Matera",
                                 "Trapani (b)" : "Trapani",
                                 "Matera (b)" : "Matera",
+                                "Massa" : "Massa Carrara",
                                 "Nord (*)" : "Nord",
                                 "Nord (*)" : "Nord",
                                 "Nord-ovest (*)" : "Nord-ovest",
@@ -111,6 +113,7 @@ def park_clean_function(dataset_name, path_in):
                                 "Sud (*)" : "Sud",
                                 "Isole (*)" : "Isole",
                                 "Isole (*)" : "Isole",
+                                "Capoluoghi di città metropolitana" : "capoluoghi_di_citta_metropolitana",
                                 "Capoluoghi città metropolitana" : "capoluoghi_di_citta_metropolitana",
                                 "Capoluoghi di provincia (*)" : "capoluoghi_di_provincia",
                                 "Capoluoghi di provincia (*)" : "capoluoghi_di_provincia",
@@ -121,8 +124,10 @@ def park_clean_function(dataset_name, path_in):
                                 "Pesaro" : "Pesaro e Urbino",
                                 "Carrara" : "Massa Carrara",
                                 "Forlì" : "Forli'",
-                                "Monza" : "Monza e della Brianza"}}, inplace=True)
+                                "Monza" : "Monza e della Brianza",
+                                "Verbania" : "Verbano-Cusio-Ossola"}}, inplace=True)
 
+        # drop all non-cities
         df.drop(df[df["cities"] == "Nord"].index, inplace=True)
         df.drop(df[df["cities"] == "Nord-ovest"].index, inplace=True)
         df.drop(df[df["cities"] == "Nord-est"].index, inplace=True)
@@ -201,8 +206,41 @@ def crime_clean_function(dataset_name, path_in):
     print("Cleaning specific values")
     # renaming some cities in the "cities" column
     df.replace({"cities" : {"Bolzano / Bozen" : "Bolzano",
-                            "Provincia Autonoma Bolzano / Bozen" : "Bolzano"}}, inplace=True)
-    
+                            "Massa-Carrara" : "Massa Carrara",
+                            "Forlì-Cesena" : "Forli'-Cesena",
+                            "Provincia Autonoma Bolzano / Bozen" : "Bolzano",
+                            "Valle d'Aosta / Vallée d'Aoste" : "Aosta",
+                            "Provincia Autonoma Trento" : "Trento"}}, inplace=True)
+
+    # drop all non-cities
+    df.drop(df[df["cities"] == "Italia"].index, inplace=True)
+    df.drop(df[df["cities"] == "Nord-ovest"].index, inplace=True)
+    df.drop(df[df["cities"] == "Piemonte"].index, inplace=True)
+    df.drop(df[df["cities"] == "Valle d'Aosta / Vallée d'Aoste"].index, inplace=True)
+    df.drop(df[df["cities"] == "Liguria"].index, inplace=True)
+    df.drop(df[df["cities"] == "Lombardia"].index, inplace=True)
+    df.drop(df[df["cities"] == "Nord-est"].index, inplace=True)
+    df.drop(df[df["cities"] == "Trentino Alto Adige / Südtirol"].index, inplace=True)
+    df.drop(df[df["cities"] == "Veneto"].index, inplace=True)
+    df.drop(df[df["cities"] == "Friuli-Venezia Giulia"].index, inplace=True)
+    df.drop(df[df["cities"] == "Emilia-Romagna"].index, inplace=True)
+    df.drop(df[df["cities"] == "Centro"].index, inplace=True)
+    df.drop(df[df["cities"] == "Toscana"].index, inplace=True)
+    df.drop(df[df["cities"] == "Umbria"].index, inplace=True)
+    df.drop(df[df["cities"] == "Marche"].index, inplace=True)
+    df.drop(df[df["cities"] == "Lazio"].index, inplace=True)
+    df.drop(df[df["cities"] == "Sud"].index, inplace=True)
+    df.drop(df[df["cities"] == "Abruzzo"].index, inplace=True)
+    df.drop(df[df["cities"] == "Molise"].index, inplace=True)
+    df.drop(df[df["cities"] == "Campania"].index, inplace=True)
+    df.drop(df[df["cities"] == "Puglia"].index, inplace=True)
+    df.drop(df[df["cities"] == "Basilicata"].index, inplace=True)
+    df.drop(df[df["cities"] == "Calabria"].index, inplace=True)
+    df.drop(df[df["cities"] == "Isole"].index, inplace=True)
+    df.drop(df[df["cities"] == "Sicilia"].index, inplace=True)
+    df.drop(df[df["cities"] == "Sardegna"].index, inplace=True)
+
+
     if(savefile):
         df.to_csv(os.path.join(path_out, "individuals_reported_and_arrested_or_detained_by_police_forces_2004_2022_ISTAT.csv"), index=False)
 
