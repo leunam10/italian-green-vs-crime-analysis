@@ -12,6 +12,23 @@
 - protected natural areas
 - agricultural parks.
 
+The park categories considered are:
+
+- Verde storico
+- Grandi parchi urbani
+- verde attrezzato
+- aree di arredo urbano
+- forestazione pubblica
+- giardini scolastici
+- orti botanici
+- orti urbani
+- giardini zoologici
+- cimiteri
+- aree sportive all'aperto
+- aree boschive
+- verde incolto
+- altro
+
 ## Crime Data
 
 :hocho: The file *individuals_reported_and_arrested_or_detained_by_police_forces.csv* contains data from 2004 and 2022:
