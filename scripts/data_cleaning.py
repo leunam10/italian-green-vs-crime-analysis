@@ -164,6 +164,13 @@ def park_clean_function(dataset_name, path_in):
                                "2020" : [df.loc[df["cities"] == "Barletta"]["2020"].iloc[0]+df.loc[df["cities"] == "Andria"]["2020"].iloc[0]+df.loc[df["cities"] == "Trani"]["2020"].iloc[0], df.loc[df["cities"] == "Forli'"]["2020"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2020"].iloc[0]],
                                "2021" : [df.loc[df["cities"] == "Barletta"]["2021"].iloc[0]+df.loc[df["cities"] == "Andria"]["2021"].iloc[0]+df.loc[df["cities"] == "Trani"]["2021"].iloc[0], df.loc[df["cities"] == "Forli'"]["2021"].iloc[0]+df.loc[df["cities"] == "Cesena"]["2021"].iloc[0]]})
 
+
+        df.drop(df[df["cities"] == "Barletta"].index, inplace=True)
+        df.drop(df[df["cities"] == "Andria"].index, inplace=True)
+        df.drop(df[df["cities"] == "Trani"].index, inplace=True)
+        df.drop(df[df["cities"] == "Forli'"].index, inplace=True)
+        df.drop(df[df["cities"] == "Cesena"].index, inplace=True)
+
         # adding the new provinces to the dataframe
         df = pd.concat([df, df_to_add], ignore_index=True)
         df_clean_list.append(df)
