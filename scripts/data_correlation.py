@@ -88,11 +88,14 @@ def park_crime_data_selection(park_df, crime_df, city, felony, normalization=Tru
 
     return park_crime_df
 
-def correlation_plot(park_df, crime_df, city, felony, method="pearson", normalization=True):
+def compute_correlation(park_df, crime_df, city, felony, method="pearson", normalization=True):
 
     """
     
+    This function returns the correlation dataframe for different combinations of city and felonies
+
     """
+    
     corr_dict = {"city" : [],
                  "felony" : [],
                  "corr" : []}
@@ -108,9 +111,38 @@ def correlation_plot(park_df, crime_df, city, felony, method="pearson", normaliz
             else:        
                 corr_dict["corr"].append(park_crime_df[["park_count", "crime_count"]].corr(method=method)["park_count"]["crime_count"])
 
-j
+    elif(city == "all" and felony == "each"):
+        for felony in crime_df["felony"].unique():
+            if(felony != "totale"):
+    
+                corr_dict["city"].append(city)
+                corr_dict["felony"].append(felony)
+    
+                park_crime_df = park_crime_data_selection(park_df, crime_df, "all", felony)
+                corr_dict["corr"].append(park_crime_df[["park_count_norm", "crime_count_norm"]].corr(method=method)["park_count_norm"]["crime_count_norm"])
+
+    elif(city == "each" and felony == "each"):
+        for city in park_df["cities"].unique():
+            for felony in crime_df["felony"].unique():
+                corr_dict["city"].append(city)
+                corr_dict["felony"].append(felony)
+
+                park_crime_df = park_crime_data_selection(park_df, crime_df, city, felony)
+                corr_dict["corr"].append(park_crime_df[["park_count_norm", "crime_count_norm"]].corr(method=method)["park_count_norm"]["crime_count_norm"])
+
+    elif(city == "all" and felony == "all"):
+        corr_dict["city"].append(city)
+        corr_dict["felony"].append(felony)
+        park_crime_df = park_crime_data_selection(park_df, crime_df, city, felony)
+        corr_dict["corr"].append(park_crime_df[["park_count_norm", "crime_count_norm"]].corr(method=method)["park_count_norm"]["crime_count_norm"])
+
     corr_df = pd.DataFrame(corr_dict)
+
     return corr_df
+
+
+def plot_correlation(corr_df):
+    pass
 
 if(__name__ == "__main__"):
 
@@ -143,19 +175,12 @@ if(__name__ == "__main__"):
     crime_df = pd.read_csv(os.path.join(crime_path_in, crime_filename))
 
 
-    correlation_plot(park_df, crime_df, "each", "all")
-    quit()
-        
-#    for felony in crime_df["felony"].unique():
-#        if(felony != "totale"):
-#            park_crime_df = park_crime_data_selection(park_df, crime_df, "all", felony)
-#            corr = park_crime_df[["park_count_norm", "crime_count_norm"]].corr()["park_count_norm"]["crime_count_norm"]
-#            print(felony, corr)
+    corr_df = compute_correlation(park_df, crime_df, "each", "all")
 
-for city in park_df["cities"].unique():
-    for felony in crime_df["felony"].unique():
-        
-        park_crime_df = park_crime_data_selection(park_df, crime_df, "all", felony)
-        corr = park_crime_df[["park_count_norm", "crime_count_norm"]].corr()["park_count_norm"]["crime_count_norm"]
-        print(city, felony, corr)
+    print(corr_df)
+
+    #fig, ax = plt.subplots()    
+    #corr_df.plot.barh(x="city", y="corr", ax=ax)
+    #plt.savefig("prova.png")
+    #plt.show()
    
