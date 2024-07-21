@@ -162,3 +162,7 @@ cython_debug/
 # textfile
 *.csv
 *.xlsx
+
+# figure
+*.png
+*.pdf
