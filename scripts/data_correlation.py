@@ -289,12 +289,12 @@ if(__name__ == "__main__"):
             os.mkdir(path_out_final)
         corr_df.to_csv(os.path.join(path_out_final, corr_filename))
 
-    #plot_correlation(corr_df, city, felony, figname=corr_fig_filename)    
+    plot_correlation(corr_df, city, felony, figname=corr_fig_filename)    
    
     if(city == "each" and felony == "all"):
-        for city in corr_df["city"].unique():
-            plot_correlation(corr_df, city, felony, figname="corr_"+city+"_all_felonies")    
-
-    if(felony == "each" and city == "all"):
         for felony in corr_df["felony"].unique():
             plot_correlation(corr_df, city, felony, figname="corr_"+felony+"_all_cities")    
+
+    if(felony == "each" and city == "all"):
+        for city in corr_df["city"].unique():
+            plot_correlation(corr_df, city, felony, figname="corr_"+city+"_all_felonies")    
