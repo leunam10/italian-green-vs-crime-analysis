@@ -14,20 +14,20 @@
 
 The park categories considered are:
 
-- Verde storico
-- Grandi parchi urbani
-- verde attrezzato
-- aree di arredo urbano
-- forestazione pubblica
-- giardini scolastici
-- orti botanici
-- orti urbani
-- giardini zoologici
-- cimiteri
-- aree sportive all'aperto
-- aree boschive
-- verde incolto
-- altro
+- Verde storico (historic green spaces)
+- Grandi parchi urbani (large urban parks)
+- Verde attrezzato (equipped green spaces)
+- Aree di arredo urbano (urban design areas)
+- Forestazione pubblica (public afforestation)
+- Giardini scolastici (school gardens)
+- Orti botanici (botanical gardens)
+- Orti urbani (urban gardens)
+- Giardini zoologici (zoological gardens)
+- Cimiteri (cemeteries)
+- Aree sportive all'aperto (outdoor sports areas)
+- Aree boschive (wooded areas)
+- Verde incolto (uncultivated green spaces)
+- Altro (other)
 
 ## Crime Data
 
