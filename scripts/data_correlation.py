@@ -112,12 +112,13 @@ def compute_correlation(park_df, crime_df, city, felony, method="pearson", norma
     This function returns the correlation dataframe for different combinations of city and felonies
 
     """
-    
+
+
     corr_dict = {"city" : [],
                  "felony" : [],
                  "corr" : []}
     
-    if(city == "each"):
+    if(city == "each" and felony != "each"):
         for city in park_df["cities"].unique():
 
             corr_dict["city"].append(city)
@@ -130,7 +131,7 @@ def compute_correlation(park_df, crime_df, city, felony, method="pearson", norma
             else:        
                 corr_dict["corr"].append(park_crime_df[["park_count", "crime_count"]].corr(method=method)["park_count"]["crime_count"])
 
-    elif(felony == "each"):
+    elif(felony == "each" and city != "each"):
         for felony in crime_df["felony"].unique():
             if(felony != "totale"):
     
@@ -291,10 +292,9 @@ if(__name__ == "__main__"):
 
     plot_correlation(corr_df, city, felony, figname=corr_fig_filename)    
    
-    if(city == "each" and felony == "all"):
+    if(city == "each" and felony == "each"):
         for felony in corr_df["felony"].unique():
             plot_correlation(corr_df, city, felony, figname="corr_"+felony+"_all_cities")    
 
-    if(felony == "each" and city == "all"):
         for city in corr_df["city"].unique():
             plot_correlation(corr_df, city, felony, figname="corr_"+city+"_all_felonies")    
