@@ -5,14 +5,14 @@ This project aims to analyze the statistical relationship between crime rates an
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Data Sources](#data-sources)
+- [Dataset Descriptions](#dataset-descriptions)
+  - [Park Data](#park-data)
+  - [Crime Data](#crime-data)
 - [Installation](#installation)
 - [Repository Structure](#repository-structure)
 - [Usage](#usage)
   - [Data Cleaning Script](#how-to-use-the-data_cleaningpy-script)
   - [Data Correlation Script](#how-to-use-the-data_correlationpy-script)
-- [Dataset Descriptions](#dataset-descriptions)
-  - [Park Data](#park-data)
-  - [Crime Data](#crime-data)
 - [Results](#results)
 - [Requirements](#requirements)
 - [Contributing](#contributing)
@@ -23,6 +23,36 @@ The goal of this project is to investigate if there is any correlation between t
 
 ## Data Sources
 The raw datasets are downloaded from the [ISTAT website](http://dati.istat.it/Index.aspx). The park data covers the years from 2011 to 2021, while the crime data spans from 2004 to 2022.
+
+## Dataset Descriptions
+
+### Park Data
+
+:four_leaf_clover: The file *VERDE_URBANO_2011_2021_ISTAT.xlsx* contains the data from 2011 to 2021. The data for capital municipalities includes:
+
+- Planning tools (plan, regulation, census, ecological network)
+- Monitoring according to Law 10/2013 (planting of new trees, tree balance, national tree day, development of green spaces, risk of tree collapse)
+- Surfaces of publicly managed areas (by type of area with a revision of historical data series for the years 2011 to 2020)
+- Natura 2000 network
+- Protected natural areas
+- Agricultural parks.
+
+The park categories considered are:
+
+- Verde storico (historic green spaces)
+- Grandi parchi urbani (large urban parks)
+- Verde attrezzato (equipped green spaces)
+- Aree di arredo urbano (urban design areas)
+- Forestazione pubblica (public afforestation)
+- Giardini scolastici (school gardens)
+- Orti botanici (botanical gardens)
+- Orti urbani (urban gardens)
+- Giardini zoologici (zoological gardens)
+- Cimiteri (cemeteries)
+- Aree sportive all'aperto (outdoor sports areas)
+- Aree boschive (wooded areas)
+- Verde incolto (uncultivated green spaces)
+- Altro (other)
 
 ## Installation
 To set up the project environment, clone this repository and install the required packages using the `requirements.txt` file. Make sure you have Python 3.10 installed.
@@ -116,36 +146,6 @@ To load a previously computed correlation file and generate a plot:
 ```bash
 python scripts/data_correlation.py --load_corr yes --corr_filename "output/corr_df.csv" --corr_fig_filename "output/correlation_plot.png"
 ```
-
-## Dataset Descriptions
-
-### Park Data
-
-:four_leaf_clover: The file *VERDE_URBANO_2011_2021_ISTAT.xlsx* contains the data from 2011 to 2021. The data for capital municipalities includes:
-
-- Planning tools (plan, regulation, census, ecological network)
-- Monitoring according to Law 10/2013 (planting of new trees, tree balance, national tree day, development of green spaces, risk of tree collapse)
-- Surfaces of publicly managed areas (by type of area with a revision of historical data series for the years 2011 to 2020)
-- Natura 2000 network
-- Protected natural areas
-- Agricultural parks.
-
-The park categories considered are:
-
-- Verde storico (historic green spaces)
-- Grandi parchi urbani (large urban parks)
-- Verde attrezzato (equipped green spaces)
-- Aree di arredo urbano (urban design areas)
-- Forestazione pubblica (public afforestation)
-- Giardini scolastici (school gardens)
-- Orti botanici (botanical gardens)
-- Orti urbani (urban gardens)
-- Giardini zoologici (zoological gardens)
-- Cimiteri (cemeteries)
-- Aree sportive all'aperto (outdoor sports areas)
-- Aree boschive (wooded areas)
-- Verde incolto (uncultivated green spaces)
-- Altro (other)
 
 ### Crime Data
 
